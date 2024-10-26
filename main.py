@@ -10,7 +10,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from db import insert_product_sale, get_inventory, add_elements_to_inventory, confirm_element_db, add_product_to_inventory_db, \
-        decrease_inventory_quantity, get_product_info_db, update_product_info_db, delete_from_inventory_db, update_name_and_description_db
+        decrease_inventory_quantity, get_product_info_db, update_product_info_db, delete_from_inventory_db, update_name_and_description_db, \
+            update_token_db, get_token_db
 
 from utils.ia import get_text_in_photo, get_products_in_photo
 
@@ -34,7 +35,8 @@ async def create_item(item: ProductSale):
     update_product_info_db(item)
 
     if current_quantity <= PRODUCT_NOTIFICATION_THRESHOLD:
-        send_notification(f"Quedan {current_quantity} unidades de {item.name}", f"Debe ir previniendo comprar más de {item.name}")
+        token = get_token_db()
+        send_notification(f"Quedan {current_quantity} unidades de {item.name}", f"Debe ir previniendo comprar más de {item.name}", token)
 
     return JSONResponse(
         content={"message": "Product sale added successfully"},
@@ -148,8 +150,17 @@ async def update_name_and_description(data: dict):
 async def send_notification_controller(data: dict):
     title = data.get('title')
     body = data.get('body')
-    res = send_notification(title, body)
+    token = get_token_db()
+    res = send_notification(title, body, token)
     return JSONResponse(
         content={"message": "Notification sent successfully" if res else "Error sending notification"},
+        media_type="application/json; charset=utf-8"
+    )
+
+@app.post("/update-token")
+async def update_token(token: str):
+    res = update_token_db(token)
+    return JSONResponse(
+        content={"message": "Token updated successfully" if res else "Error updating token"},
         media_type="application/json; charset=utf-8"
     )

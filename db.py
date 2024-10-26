@@ -276,3 +276,41 @@ def update_name_and_description_db(id, name, description):
             cursor.close()
             connection.close()
     return res
+
+
+def update_token_db(token):
+    res = False
+    connection = get_db_connection()
+    if connection is None:
+        return res
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute("UPDATE tokens SET token = %s", (token,))
+        connection.commit()
+        res = True
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error while updating token: {error}")
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+    return res
+
+def get_token_db():
+    token = None
+    connection = get_db_connection()
+    if connection is None:
+        return token
+    
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT token FROM tokens")
+        token = cursor.fetchone()[0]
+    except (Exception, psycopg2.Error) as error:
+        print(f"Error while getting token: {error}")
+    finally:
+        if connection:
+            cursor.close()
+            connection.close()
+    return token

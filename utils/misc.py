@@ -22,7 +22,7 @@ def generate_firebase_token():
     keyfile_dict.refresh(request)
     return keyfile_dict.token
 
-def send_notification(title, body):
+def send_notification(title, body, token):
     res = None
     try:
         url = os.environ.get('FCM_ENDPOINT')
@@ -31,7 +31,7 @@ def send_notification(title, body):
 
         payload = json.dumps({
             "message": {
-                    "token": FIREBASE_NOTIFICATIONS_TOKEN,
+                    "token": token,
                     "data": {"itemId": "123"},
                     "notification": {
                     "title": title,
