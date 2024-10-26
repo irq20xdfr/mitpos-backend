@@ -158,7 +158,8 @@ async def send_notification_controller(data: dict):
     )
 
 @app.post("/update-token")
-async def update_token(token: str):
+async def update_token(data: dict):
+    token = data.get('token')
     res = update_token_db(token)
     return JSONResponse(
         content={"message": "Token updated successfully" if res else "Error updating token"},
