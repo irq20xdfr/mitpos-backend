@@ -23,6 +23,8 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt/live/mitpos.bearbonesservices.com/fullchain.pem:/etc/letsencrypt/live/mitpos.bearbonesservices.com/fullchain.pem:ro
       - /etc/letsencrypt/live/mitpos.bearbonesservices.com/privkey.pem:/etc/letsencrypt/live/mitpos.bearbonesservices.com/privkey.pem:ro
+      - /etc/letsencrypt/live/liverpool.bearbonesservices.com/fullchain.pem:/etc/letsencrypt/live/liverpool.bearbonesservices.com/fullchain.pem:ro
+      - /etc/letsencrypt/live/liverpool.bearbonesservices.com/privkey.pem:/etc/letsencrypt/live/liverpool.bearbonesservices.com/privkey.pem:ro
       - ./firebase-admin.json:/app/firebase-admin.json:ro
     depends_on:
       - app
